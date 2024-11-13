@@ -17,51 +17,6 @@ char *get_next_line(int fd);
 
 ## Fonctionnement détaillé
 
-flowchart TD
-    A[Start get_next_line] --> B{Check fd, BUFFER_SIZE}
-    B -->|Invalid| C[Free buffer if exists]
-    C --> D[Return NULL]
-    
-    B -->|Valid| E[read_file]
-    
-    %% read_file process
-    E --> F{Buffer exists?}
-    F -->|No| G[Create empty buffer]
-    F -->|Yes| H[Allocate temp buffer]
-    G --> H
-    H --> I{Read BUFFER_SIZE bytes}
-    I -->|Error| J[Free buffers & Return NULL]
-    I -->|Success| K[Join with existing content]
-    K --> L{Found \n or EOF?}
-    L -->|No| I
-    L -->|Yes| M[Return joined content]
-    
-    %% Main process continues
-    M --> N{Buffer valid?}
-    N -->|No| D
-    N -->|Yes| O[ft_line]
-    
-    %% ft_line process
-    O --> P{Content exists?}
-    P -->|No| Q[Return NULL]
-    P -->|Yes| R[Extract line until \n]
-    
-    %% ft_next process
-    R --> S[ft_next]
-    S --> T[Find \n position]
-    T --> U{Found \n?}
-    U -->|No| V[Free str & Return NULL]
-    U -->|Yes| W[Extract remaining content]
-    
-    %% Final steps
-    W --> X[Return line]
-    V --> X
-    Q --> X
-
-    style A fill:#f9f,stroke:#333
-    style D fill:#f66,stroke:#333
-    style X fill:#6f6,stroke:#333
-
 ### 1. Fonction principale : get_next_line
 ```c
 char *get_next_line(int fd)
