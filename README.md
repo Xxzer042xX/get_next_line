@@ -18,6 +18,7 @@ char *get_next_line(int fd);
 ## Fonctionnement détaillé
 
 ```mermaid
+
 flowchart TD
     A[Start get_next_line] --> B{Check fd, BUFFER_SIZE}
     B -->|Invalid| C[Free buffer if exists]
@@ -62,6 +63,7 @@ flowchart TD
     style A fill:#f9f,stroke:#333
     style D fill:#f66,stroke:#333
     style X fill:#6f6,stroke:#333
+```
 
 ### 1. Fonction principale : get_next_line
 ```c
