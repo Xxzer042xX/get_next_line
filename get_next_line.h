@@ -22,11 +22,29 @@
 
 # define OPEN_MAX 1024
 
+/* ************************************************************************** */
+/*                            Fonctions main                                  */
+/* ************************************************************************** */
+
 char	*get_next_line(int fd);
+
+/* ************************************************************************** */
+/*                            Fonctions aux                                   */
+/* ************************************************************************** */
+
+char	*read_file(int fd, char *res);
+char	*ft_line(char *buffer);
+char	*ft_next(char *buffer);
+char	*fr_free(char *buffer, char *buf);
+
+/* ************************************************************************** */
+/*                            Fonctions utils                                 */
+/* ************************************************************************** */
+
 char	*ft_strjoin(char const *s1, char const *s2);
-char	*ft_strchr(const char *string, int searchedChar);
+char	*ft_strchr(const char *str, int c);
 void	ft_bzero(void *s, size_t n);
-void	*ft_calloc(size_t elementCount, size_t elementSize);
-size_t	ft_strlen(const char *theString);
+void	*ft_calloc(size_t n, size_t size);
+size_t	ft_strlen(const char *str);
 
 #endif

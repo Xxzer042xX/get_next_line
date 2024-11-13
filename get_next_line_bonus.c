@@ -12,11 +12,6 @@
 
 #include "get_next_line_bonus.h"
 
-char	*read_file(int fd, char *res);
-char	*ft_line(char *buffer);
-char	*ft_next(char *buffer);
-char	*fr_free(char *buffer, char *buf);
-
 char	*get_next_line(int fd)
 {
 	static char	*buffer[OPEN_MAX];
@@ -105,10 +100,7 @@ char	*ft_next(char *buffer)
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
 	if (!buffer[i])
-	{
-		free(buffer);
-		return (NULL);
-	}
+		return (free(buffer), NULL);
 	line = ft_calloc((ft_strlen(buffer) - i + 1), sizeof(char));
 	if (!line)
 		return (free(buffer), NULL);
@@ -116,8 +108,7 @@ char	*ft_next(char *buffer)
 	j = 0;
 	while (buffer[i])
 		line[j++] = buffer[i++];
-	free(buffer);
-	return (line);
+	return (free(buffer), line);
 }
 
 char	*fr_free(char *buffer, char *buf)
@@ -125,6 +116,5 @@ char	*fr_free(char *buffer, char *buf)
 	char	*temp;
 
 	temp = ft_strjoin(buffer, buf);
-	free(buffer);
-	return (temp);
+	return (free(buffer), temp);
 }
