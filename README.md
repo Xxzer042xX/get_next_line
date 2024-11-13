@@ -83,13 +83,19 @@ Le programme utilise plusieurs mécanismes pour gérer la mémoire efficacement 
 
 Exemple d'utilisation :
 ```c
-int fd = open("fichier.txt", O_RDONLY);
+int fd;
 char *line;
 
-while ((line = get_next_line(fd)))
+fd = open("fichier.txt", O_RDONLY);
+if (fd < 0)
+    return (-1);
+
+line = get_next_line(fd);
+while (line != NULL)
 {
     printf("%s", line);
     free(line);
+    line = get_next_line(fd);
 }
 close(fd);
 ```
