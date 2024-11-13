@@ -1,43 +1,126 @@
-• Des appels successifs à votre fonction get_next_line() doivent vous permettre de
-lire l’intégralité du fichier texte référencé par le descripteur de fichier, une ligne
-à la fois.
+# Get Next Line (GNL)
 
-• Votre programme doit compiler avec l’option : -D BUFFER_SIZE=n
+## Description
+Get Next Line est une fonction qui permet de lire le contenu d'un fichier ligne par ligne. Cette fonction est particulièrement utile pour traiter des fichiers texte de manière séquentielle, en retournant une ligne à chaque appel jusqu'à la fin du fichier.
 
-Votre fonction doit retourner la ligne qui vient d’être lue.
-S’il n’y a plus rien à lire, ou en cas d’erreur, elle doit retourner NULL
+## Prototype de la fonction
+```c
+char *get_next_line(int fd);
+```
 
-• Assurez-vous que votre fonction se comporte correctement qu’elle lise un fichier
-ou qu’elle lise sur l’entrée standar
+## Paramètres
+- `fd` : Le descripteur de fichier à partir duquel lire
 
-• Important : Vous devez toujours retourner la ligne qui a été lue suivie du \n la
-terminant, sauf dans le cas où vous avez atteint la fin du fichier et que ce dernier
-ne se termine pas par un \n.
+## Valeur de retour
+- Une ligne de texte depuis le fichier
+- `NULL` si la lecture est terminée ou si une erreur survient
 
+## Fonctionnement détaillé
 
-Il faut pouvoir compiler ce projet avec et sans le -D
-Indicateur BUFFER_SIZE en plus des indicateurs habituels. Vous pouvez choisir la valeur par défaut de votre choix.
+### 1. Fonction principale : get_next_line
+```c
+char *get_next_line(int fd)
+```
+La fonction principale utilise un buffer statique pour conserver les données entre les appels. Elle :
+- Vérifie la validité des paramètres (fd, BUFFER_SIZE)
+- Gère les erreurs de lecture
+- Coordonne les opérations de lecture et de traitement des lignes
+- Maintient l'état entre les appels grâce au buffer statique
 
-otre programme sera donc compilé de la manière suivante (exemple ci-dessous
-avec une taille de buffer de 42) :
-cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 <files>.c
+### 2. Fonction read_file
+```c
+char *read_file(int fd, char *str)
+```
+Cette fonction est responsable de :
+- Lire le fichier par blocs de BUFFER_SIZE octets
+- Accumuler les données lues dans une chaîne
+- Continuer la lecture jusqu'à trouver un retour à la ligne ou la fin du fichier
+- Gérer la mémoire dynamique pour le stockage des données
 
-• Nous considérons que get_next_line() a un comportement indeterminé si, entre
-deux appels, le fichier pointé par le descripteur de fichier a été modifié, alors que
-le premier fichier n’a pas été lu en entier.
+### 3. Fonction ft_line
+```c
+char *ft_line(char *str)
+```
+Cette fonction :
+- Extrait la première ligne du buffer
+- Alloue la mémoire nécessaire pour la ligne
+- Copie les caractères jusqu'au premier '\n' ou la fin de la chaîne
+- Gère le cas particulier du retour à la ligne
 
-Nous considérons aussi que get_next_line() a un comportement indeterminé en
-cas de lecture d’un fichier binaire. Cependant, si vous le souhaitez, vous pouvez
-rendre ce comportement cohérent.
+### 4. Fonction ft_next
+```c
+char *ft_next(char *str)
+```
+Cette fonction :
+- Prépare le buffer pour le prochain appel
+- Supprime la ligne déjà lue
+- Conserve le reste du buffer pour la prochaine lecture
+- Gère la mémoire de manière efficace
 
-Votre programme doit lire le moins possible à chaque appel à
-get_next_line(). Si vous rencontrez une nouvelle ligne, vous devez
-retourner la ligne précédente venant d’être lue.
-Ne lisez pas l’intégralité du fichier pour ensuite traiter chaque
-ligne.
+## Gestion de la mémoire
 
- La fonction lseek() est interdite.
-• Les variables globales sont interdites.
+Le programme utilise plusieurs mécanismes pour gérer la mémoire efficacement :
+1. Un buffer statique pour conserver les données entre les appels
+2. Libération systématique de la mémoire en cas d'erreur
+3. Gestion des fuites de mémoire via des free appropriés
+4. Utilisation de ft_calloc pour une initialisation sécurisée
 
+## Cas particuliers gérés
 
-gcc -Wall -Wextra -Werror -D BUFFER_SIZE=42 test_get_next_line.c get_next_line.c -o test_get_next_line
+1. Fichiers invalides ou erreurs de lecture
+2. Buffer vide
+3. Lignes de différentes longueurs
+4. Fin de fichier
+5. Erreurs de mémoire
+
+## Limitations
+
+- Le programme est limité par BUFFER_SIZE
+- Dépend de la limite système OPEN_MAX pour le nombre de fichiers
+- La performance peut varier selon la taille du BUFFER_SIZE
+
+## Utilisation
+
+Exemple d'utilisation :
+```c
+int fd = open("fichier.txt", O_RDONLY);
+char *line;
+
+while ((line = get_next_line(fd)))
+{
+    printf("%s", line);
+    free(line);
+}
+close(fd);
+```
+
+## Dépendances
+
+Le programme nécessite les fonctions suivantes (à implémenter séparément) :
+- ft_calloc
+- ft_strjoin
+- ft_strchr
+- ft_strlen
+
+## Comportements spécifiques
+
+1. La fonction gère correctement :
+   - Les fichiers vides
+   - Les lignes sans retour à la ligne final
+   - Les erreurs de lecture
+   - La fermeture inopinée du fichier
+
+2. Gestion de la mémoire :
+   - Libération automatique du buffer en cas d'erreur
+   - Pas de fuites de mémoire en utilisation normale
+   - Gestion propre des cas d'erreur d'allocation
+
+## Conseils d'optimisation
+
+1. Ajuster BUFFER_SIZE selon les besoins :
+   - Petit BUFFER_SIZE : économie de mémoire
+   - Grand BUFFER_SIZE : meilleures performances
+
+2. Vérifier la gestion de la mémoire :
+   - Utiliser Valgrind pour détecter les fuites
+   - Tester avec différentes tailles de fichiers
