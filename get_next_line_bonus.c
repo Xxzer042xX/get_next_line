@@ -40,33 +40,33 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-char	*read_file(int fd, char *str)
+char	*read_file(int fd, char *storage)
 {
-	char	*temp;
-	char	*buffer;
+	char	*joined_str;
+	char	*temp_buffer;
 	int		byte_read;
 
-	if (!str)
-		str = ft_calloc(1, 1);
-	if (!str)
+	if (!storage)
+		storage = ft_calloc(1, 1);
+	if (!storage)
 		return (NULL);
-	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if (!buffer)
-		return (free(str), NULL);
+	temp_buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	if (!temp_buffer)
+		return (free(storage), NULL);
 	byte_read = 1;
 	while (byte_read > 0)
 	{
-		byte_read = read(fd, buffer, BUFFER_SIZE);
+		byte_read = read(fd, temp_buffer, BUFFER_SIZE);
 		if (byte_read == -1)
-			return (free(buffer), free(str), NULL);
-		buffer[byte_read] = '\0';
-		temp = ft_strjoin(str, buffer);
-		free(str);
-		str = temp;
-		if (!str || ft_strchr(buffer, '\n'))
+			return (free(temp_buffer), free(storage), NULL);
+		temp_buffer[byte_read] = '\0';
+		joined_str = ft_strjoin(storage, temp_buffer);
+		free(storage);
+		storage = joined_str;
+		if (!storage || ft_strchr(temp_buffer, '\n'))
 			break ;
 	}
-	return (free(buffer), str);
+	return (free(temp_buffer), storage);
 }
 
 char	*ft_line(char *str)

@@ -32,7 +32,7 @@ char	*get_next_line(int fd);
 /*                            Fonctions aux                                   */
 /* ************************************************************************** */
 
-char	*read_file(int fd, char *str);
+char	*read_file(int fd, char *storage);
 char	*ft_line(char *str);
 char	*ft_next(char *str);
 
