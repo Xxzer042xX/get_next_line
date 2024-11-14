@@ -32,7 +32,8 @@ flowchart TD
     F -->|Oui| H[Allocation temp_buffer<br>BUFFER_SIZE + 1]
     G --> H
     H --> I{Lecture BUFFER_SIZE<br>byte_read > 0}
-    I -->|Erreur de lecture<br>bytes_read == -1| J[free temp_buffer<br>free storage<br>Return NULL]
+    I -->|Erreur de lecture<br>bytes_read == -1| J[free temp_buffer<br>free storage]
+    J --> D
     I -->|Succès lecture| K[strjoin de temp_buffer<br>avec storage]
     K --> L{Trouve \n<br>ou !storage}
     L -->|Non| I
@@ -45,14 +46,16 @@ flowchart TD
     
     %% Processus ft_line
     O --> P{Contenu existe?}
-    P -->|Non| Q["free buffer[fd]<br>buffer[fd] = NULL<br>Return NULL"]
+    P -->|Non| Q["free buffer[fd]<br>buffer[fd] = NULL"]
+    Q --> D
     P -->|Oui| R[Extraction jusqu'au \n<br>ou fin de ligne]
     
     %% Processus ft_next
     R --> S[ft_next<br>Préparation buffer suivant]
     S --> T[Recherche position \n]
     T --> U{Trouvé \n?}
-    U -->|Non| V[Libération str<br>Return NULL]
+    U -->|Non| V[Libération str]
+V --> D
     U -->|Oui| W[Extraction contenu<br>restant]
     
     %% Étapes finales
