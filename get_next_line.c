@@ -19,7 +19,7 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 	{
-		if (fd >= 0 && fd < OPEN_MAX && buffer[fd])
+		if (buffer[fd])
 		{
 			free(buffer[fd]);
 			buffer[fd] = NULL;
